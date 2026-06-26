@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ FunHub — Affan's Polymath Lair</title>
+
+    <!-- 🎨 Google Fonts: Orbitron for headings, Inter for body -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- 🎨 STYLES -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 🚀 HTML STRUCTURE ─────────────────────── -->
+    <div class="app-wrapper">
+
+        <!-- ⚡ HEADER SECTION -->
+        <header class="header">
+            <div class="header-brand">
+                <h1 class="header-title">
+                    <span class="bolt">⚡</span> Affan's FunHub
+                </h1>
+                <p class="header-subtitle">
+                    <span class="counter-dot"></span>
+                    <span id="project-count">10</span> Projects • <span id="genius-label">1 Genius</span>
+                </p>
+            </div>
+
+            <div class="header-actions">
+                <!-- 🔍 Search Bar -->
+                <div class="search-wrapper">
+                    <input
+                    type="text"
+                    id="search-input"
+                    class="search-input"
+                    placeholder="Search projects..."
+                    autocomplete="off"
+                    aria-label="Search projects"
+                    >
+                    <span class="search-icon">🔍</span>
+                </div>
+
+                <!-- 🎲 Surprise Me Button -->
+                <button id="btn-surprise" class="btn-surprise" aria-label="Pick a random project">
+                    🎲 Surprise Me
+                </button>
+            </div>
+        </header>
+
+        <!-- 📦 PROJECT GRID (cards render here dynamically) -->
+        <div id="project-grid" class="project-grid" role="list" aria-label="Project cards">
+            <!-- Cards injected by JavaScript -->
+        </div>
+
+        <!-- 🙈 No results message (hidden by default) -->
+        <div id="no-results" class="no-results" role="status" aria-live="polite">
+            🕵️ No projects match your search — try a different keyword!
+        </div>
+
+        <!-- 🔥 FOOTER -->
+        <footer class="footer">
+            <span class="fire">🔥</span> Built with chaos by Affan — 2026
+        </footer>
+    </div>
+
+    <!-- ⚙️ ALL JAVASCRIPT LOGIC -->
+    <script src="script.js"></script>
+</body>
+</html>

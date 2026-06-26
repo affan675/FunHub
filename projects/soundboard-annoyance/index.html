@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soundboard of Annoyance</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="counter-badge" id="counterBadge">Sounds Triggered: 0</div>
+
+    <main class="container">
+        <h1 class="title">Soundboard of Annoyance</h1>
+        
+        <div class="sound-grid" id="soundGrid">
+            </div>
+
+        <div class="chaos-controls">
+            <button id="btnRandom" class="control-btn random-btn">🎲 Random</button>
+            <button id="btnPlayAll" class="control-btn play-all-btn">💥 Play All</button>
+        </div>
+
+        <div class="volume-container">
+            <label for="volumeSlider">🔊 Annoyance Level</label>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.8">
+        </div>
+    </main>
+
+    <footer>
+        <p>⚠️ Warning: May cause hostel warden intervention.</p>
+        <p class="shortcuts">Shortcuts: Keys <strong>1-6</strong> to play • <strong>R</strong> for Random • <strong>V</strong> to Mute/Unmute</p>
+    </footer>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

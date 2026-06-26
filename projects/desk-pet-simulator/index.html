@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desk Pet Simulator - Warden</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@400;700&display=swap');
+
+    :root {
+      --cyan: #00f0ff;
+      --yellow: #ffea00;
+      --orange: #ff5e00;
+      --red: #ff003c;
+      --grey: #4a4a5a;
+      --blob-color: var(--cyan);
+      --bg-color-1: #0f0c29;
+      --bg-color-2: #302b63;
+      --bg-color-3: #24243e;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      height: 100vh;
+      background: linear-gradient(-45deg, var(--bg-color-1), var(--bg-color-2), var(--bg-color-3));
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      font-family: 'Outfit', sans-serif;
+      color: white;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* DRAGGABLE WIDGET CONTAINER */
+    #pet-container {
+      position: absolute;
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: grab;
+      z-index: 10;
+    }
+    
+    #pet-container:active {
+      cursor: grabbing;
+    }
+
+    /* BLOB STYLING (3D Gelatinous Look) */
+    .blob-wrapper {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    #blob {
+      width: 110px;
+      height: 110px;
+      /* The 3D gel effect */
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8) 0%, var(--blob-color) 40%, rgba(0,0,0,0.6) 90%);
+      border-radius: 50%;
+      /* Dynamic neon glow */
+      box-shadow: 
+        inset -10px -10px 20px rgba(0,0,0,0.4), 
+        inset 10px 10px 20px rgba(255,255,255,0.4),
+        0 0 30px var(--blob-color),
+        0 20px 30px rgba(0,0,0,0.5);
+      animation: float 4s ease-in-out infinite;
+      transition: background 0.5s ease, box-shadow 0.5s ease, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
+    }
+
+    #blob:hover {
+      animation: wobble 0.6s infinite;
+      box-shadow: 
+        inset -10px -10px 20px rgba(0,0,0,0.4), 
+        inset 10px 10px 20px rgba(255,255,255,0.4),
+        0 0 50px var(--blob-color),
+        0 20px 30px rgba(0,0,0,0.5);
+    }
+
+    #blob.blink {
+      animation: float 4s ease-in-out infinite, pulseGlow 1s infinite alternate;
+    }
+    
+    #blob.dead {
+      animation: none;
+      transform: scale(1) translateY(40px);
+      border-radius: 60% 60% 20% 20%;
+      box-shadow: inset -10px -10px 20px rgba(0,0,0,0.8), 0 10px 20px rgba(0,0,0,0.5);
+      background: radial-gradient(circle at 30% 30%, #777 0%, var(--grey) 40%, #111 90%);
+    }
+
+    /* EMOJI & CROWN */
+    #mood-emoji {
+      position: absolute;
+      top: -20px;
+      font-size: 28px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 5px 10px;
+      border-radius: 20px;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      animation: float 4s ease-in-out infinite 0.2s;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* SPEECH BUBBLE */
+    #speech-bubble {
+      position: absolute;
+      left: 115%;
+      top: -10px;
+      width: max-content;
+      max-width: 200px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #111;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      line-height: 1.4;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      opacity: 0;
+      transform: translateY(10px) scale(0.9);
+      pointer-events: none;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 20;
+    }
+
+    #speech-bubble::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: -8px;
+      transform: translateY(-50%);
+      border-width: 6px 8px 6px 0;
+      border-style: solid;
+      border-color: transparent rgba(255, 255, 255, 0.95) transparent transparent;
+    }
+
+    #speech-bubble.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* GLASSMORPHISM UI PANEL */
+    .ui-panel {
+      width: 100%;
+      background: rgba(20, 20, 30, 0.5);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      padding: 20px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4), inset 0 0 20px rgba(255,255,255,0.05);
+    }
+
+    .ui-header {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #8a8a9d;
+      margin-bottom: 15px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .bar-container {
+      margin-bottom: 15px;
+    }
+
+    .bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 14px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.05);
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 8px;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+      position: relative;
+    }
+
+    .bar-fill::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    #hunger-fill { 
+      background: linear-gradient(90deg, #ff003c, #00f0ff); 
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+    }
+    
+    #happy-fill { 
+      background: linear-gradient(90deg, #ff003c, #ffea00); 
+      box-shadow: 0 0 10px rgba(255, 234, 0, 0.5);
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #a0a0b5;
+      margin-top: 15px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 12px;
+      font-weight: 700;
+    }
+
+    /* DEATH SCREEN */
+    #death-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle, rgba(20,0,0,0.9) 0%, rgba(0,0,0,0.95) 100%);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    #death-screen h1 {
+      font-family: 'Press Start 2P', cursive;
+      color: var(--red);
+      font-size: 20px;
+      text-align: center;
+      line-height: 2;
+      text-shadow: 0 0 20px rgba(255,0,0,0.5);
+      margin-bottom: 40px;
+    }
+
+    #restart-btn {
+      padding: 18px 40px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 1px;
+      background: white;
+      color: black;
+      border: none;
+      cursor: pointer;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(255,255,255,0.2);
+    }
+
+    #restart-btn:hover {
+      background: var(--red);
+      color: white;
+      box-shadow: 0 10px 30px rgba(255,0,60,0.5);
+      transform: translateY(-3px);
+    }
+
+    /* ANIMATIONS */
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    @keyframes wobble {
+      0% { transform: rotate(0deg) scale(1.05); }
+      25% { transform: rotate(-8deg) scale(1.05); }
+      50% { transform: rotate(0deg) scale(1.05); }
+      75% { transform: rotate(8deg) scale(1.05); }
+      100% { transform: rotate(0deg) scale(1.05); }
+    }
+
+    @keyframes pulseGlow {
+      from { box-shadow: 0 0 10px var(--red), inset -10px -10px 20px rgba(0,0,0,0.4); }
+      to { box-shadow: 0 0 60px var(--red), inset -10px -10px 20px rgba(0,0,0,0.4); opacity: 0.8; }
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="pet-container">
+    <div class="blob-wrapper">
+      <div id="mood-emoji">😁</div>
+      <div id="blob"></div>
+      <div id="speech-bubble"></div>
+    </div>
+
+    <div class="ui-panel">
+      <div class="ui-header">● Warden's System ●</div>
+      
+      <div class="bar-container">
+        <div class="bar-label"><span>Energy (Hunger)</span><span id="hunger-val">80%</span></div>
+        <div class="bar-track">
+          <div id="hunger-fill" class="bar-fill" style="width: 80%;"></div>
+        </div>
+      </div>
+      
+      <div class="bar-container">
+        <div class="bar-label"><span>Serotonin</span><span id="happy-val">80%</span></div>
+        <div class="bar-track">
+          <div id="happy-fill" class="bar-fill" style="width: 80%;"></div>
+        </div>
+      </div>
+      
+      <div class="stats">
+        <span id="age-stat">Uptime: 0m</span>
+        <span id="feed-stat">Interactions: 0</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="death-screen">
+    <h1>CRITICAL FAILURE<br><br>WARDEN HAS<br>PERISHED.</h1>
+    <button id="restart-btn">INITIALIZE REBOOT</button>
+  </div>
+
+  <script>
+    // Data Layer
+    const DEFAULT_STATE = {
+      hunger: 80,
+      happiness: 80,
+      size: 1.0,
+      ageMinutes: 0,
+      feeds: 0,
+      isDead: false,
+      lastSaved: Date.now()
+    };
+
+    let state = { ...DEFAULT_STATE };
+    let timers = {};
+    let isTyping = false;
+    let lastClickTime = 0;
+
+    // Upgraded Nag Bank
+    const nags = [
+      "I am literally dissolving. Feed me.",
+      "Are you coding or just actively ignoring me?",
+      "My serotonin levels are dropping. Fix it.",
+      "You wouldn't treat a real pet like this.",
+      "I saw you open another tab. Betrayal.",
+      "Click me before I delete your node_modules."
+    ];
+
+    // DOM Elements
+    const root = document.documentElement;
+    const blob = document.getElementById('blob');
+    const moodEmoji = document.getElementById('mood-emoji');
+    const speechBubble = document.getElementById('speech-bubble');
+    const hungerFill = document.getElementById('hunger-fill');
+    const happyFill = document.getElementById('happy-fill');
+    const hungerVal = document.getElementById('hunger-val');
+    const happyVal = document.getElementById('happy-val');
+    const ageStat = document.getElementById('age-stat');
+    const feedStat = document.getElementById('feed-stat');
+    const deathScreen = document.getElementById('death-screen');
+    const container = document.getElementById('pet-container');
+
+    // Engine
+    function init() {
+      loadState();
+      updateUI();
+      if (state.isDead) {
+        die();
+      } else {
+        startLoops();
+      }
+    }
+
+    function loadState() {
+      const saved = localStorage.getItem('warden_state_v2');
+      if (saved) {
+        state = JSON.parse(saved);
+        
+        if (!state.isDead) {
+          const now = Date.now();
+          const timeDiff = now - state.lastSaved;
+          
+          const missedDecays = Math.floor(timeDiff / 3000);
+          const missedMinutes = Math.floor(timeDiff / 60000);
+          
+          state.hunger = Math.max(0, state.hunger - missedDecays);
+          state.happiness = state.hunger;
+          state.ageMinutes += missedMinutes;
+          
+          if (state.hunger <= 0) state.isDead = true;
+        }
+      }
+    }
+
+    function saveState() {
+      state.lastSaved = Date.now();
+      localStorage.setItem('warden_state_v2', JSON.stringify(state));
+    }
+
+    function startLoops() {
+      timers.decay = setInterval(() => {
+        state.hunger = Math.max(0, state.hunger - 1);
+        state.happiness = state.hunger; 
+        updateUI();
+        if (state.hunger <= 0) die();
+      }, 3000);
+
+      timers.age = setInterval(() => {
+        state.ageMinutes += 1;
+        updateUI();
+      }, 60000);
+
+      timers.nag = setInterval(() => {
+        if (state.hunger < 40 && state.hunger > 0 && !isTyping) {
+          showNag(nags[Math.floor(Math.random() * nags.length)]);
+        }
+      }, 30000);
+
+      timers.save = setInterval(saveState, 10000);
+    }
+
+    function clearLoops() {
+      Object.values(timers).forEach(clearInterval);
+    }
+
+    function typeWriter(text, cb) {
+      isTyping = true;
+      speechBubble.innerHTML = '';
+      speechBubble.classList.add('visible');
+      
+      let i = 0;
+      const interval = setInterval(() => {
+        speechBubble.innerHTML += text.charAt(i);
+        i++;
+        if (i >= text.length) {
+          clearInterval(interval);
+          setTimeout(() => {
+            speechBubble.classList.remove('visible');
+            isTyping = false;
+            if(cb) cb();
+          }, 3500);
+        }
+      }, 40);
+    }
+
+    function showNag(message) {
+      if (isTyping) return;
+      typeWriter(message);
+    }
+
+    function feed() {
+      if (state.isDead) return;
+      
+      const now = Date.now();
+      if (now - lastClickTime < 250) {
+        showNag("Whoa, slow down! That hurts.");
+        return;
+      }
+      lastClickTime = now;
+
+      state.hunger = Math.min(100, state.hunger + 15);
+      state.happiness = state.hunger;
+      state.size = Math.min(2.0, state.size + 0.05);
+      state.feeds += 1;
+      
+      blob.style.transform = `scale(${state.size + 0.1})`;
+      setTimeout(() => {
+        blob.style.transform = `scale(${state.size})`;
+      }, 150);
+
+      updateUI();
+      saveState();
+    }
+
+    function die() {
+      state.isDead = true;
+      state.hunger = 0;
+      state.happiness = 0;
+      clearLoops();
+      saveState();
+      
+      blob.classList.add('dead');
+      blob.classList.remove('blink');
+      root.style.setProperty('--blob-color', 'var(--grey)');
+      moodEmoji.innerText = '☠️';
+      
+      setTimeout(() => {
+        deathScreen.style.display = 'flex';
+      }, 1200);
+      
+      updateUI();
+    }
+
+    function restart() {
+      state = { ...DEFAULT_STATE, lastSaved: Date.now() };
+      blob.classList.remove('dead');
+      deathScreen.style.display = 'none';
+      saveState();
+      startLoops();
+      updateUI();
+    }
+
+    // Display Layer
+    function updateUI() {
+      hungerFill.style.width = `${state.hunger}%`;
+      happyFill.style.width = `${state.happiness}%`;
+      hungerVal.innerText = `${state.hunger}%`;
+      happyVal.innerText = `${state.happiness}%`;
+      ageStat.innerText = `Uptime: ${state.ageMinutes}m`;
+      feedStat.innerText = `Interactions: ${state.feeds}`;
+
+      if (state.isDead) return;
+
+      blob.style.transform = `scale(${state.size})`;
+      let evolutionEmoji = state.size >= 1.8 ? ' 👑' : '';
+
+      blob.classList.remove('blink');
+      if (state.hunger > 70) {
+        root.style.setProperty('--blob-color', 'var(--cyan)');
+        moodEmoji.innerText = '😁' + evolutionEmoji;
+      } else if (state.hunger > 40) {
+        root.style.setProperty('--blob-color', 'var(--yellow)');
+        moodEmoji.innerText = '😐' + evolutionEmoji;
+      } else if (state.hunger > 20) {
+        root.style.setProperty('--blob-color', 'var(--orange)');
+        moodEmoji.innerText = '😠' + evolutionEmoji;
+      } else {
+        root.style.setProperty('--blob-color', 'var(--red)');
+        moodEmoji.innerText = '💀' + evolutionEmoji;
+        blob.classList.add('blink');
+      }
+    }
+
+    // Interactions
+    blob.addEventListener('click', feed);
+    document.getElementById('restart-btn').addEventListener('click', restart);
+
+    // Draggable Logic
+    let isDragging = false;
+    let offsetX = 0, offsetY = 0;
+
+    container.addEventListener('mousedown', (e) => {
+      if(e.target === blob || state.isDead) return; 
+      isDragging = true;
+      offsetX = e.clientX - container.offsetLeft;
+      offsetY = e.clientY - container.offsetTop;
+      container.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      container.style.left = `${e.clientX - offsetX}px`;
+      container.style.top = `${e.clientY - offsetY}px`;
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      container.style.cursor = 'grab';
+    });
+
+    // Start
+    init();
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polymath Fact Machine</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <div class="ticker__item" id="ticker-text">Booting Polymath System... Initializing knowledge base...</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <header class="header">
+      <div class="filters">
+        <button class="filter-btn active" data-category="All">All</button>
+        <button class="filter-btn" data-category="Math">🧮 Math</button>
+        <button class="filter-btn" data-category="Science">🧬 Science</button>
+        <button class="filter-btn" data-category="Business">📈 Business</button>
+      </div>
+      <div class="counter" id="fact-counter">Fact #1</div>
+    </header>
+
+    <main class="card-container">
+      <svg class="progress-ring" width="300" height="300">
+        <circle class="progress-ring__circle" stroke="rgba(0, 255, 255, 0.1)" stroke-width="6" fill="transparent" r="140" cx="150" cy="150"/>
+        <circle class="progress-ring__indicator" stroke="#0ff" stroke-width="6" fill="transparent" r="140" cx="150" cy="150"/>
+      </svg>
+      
+      <div class="fact-card glass" id="fact-card">
+        <div class="emoji-container" id="fact-emoji">🔥</div>
+        <h1 class="fact-text" id="fact-text">Affan built this while his hostel warden thought he was sleeping.</h1>
+      </div>
+    </main>
+
+    <div class="controls">
+      <button class="glass-btn" id="surprise-btn">⚡ Surprise Me</button>
+      <button class="glass-btn" id="share-btn">🔗 Share Fact</button>
+      <button class="glass-btn" id="voice-btn">🤖 Read Aloud</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

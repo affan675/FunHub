@@ -1,0 +1,161 @@
+:root {
+    --bg-start: #0a0a0a;
+    --bg-end: #1a1a2e;
+    --neon-color: #555; /* Defaults to grey */
+    --text-main: #e0e0e0;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Orbitron', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-main);
+}
+
+.container {
+    background: rgba(20, 20, 35, 0.8);
+    backdrop-filter: blur(10px);
+    padding: 2.5rem;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 90%;
+    max-width: 450px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    letter-spacing: 2px;
+}
+
+.highlight {
+    color: var(--neon-color);
+    transition: color 0.3s ease;
+}
+
+/* GIF Styling */
+.gif-container {
+    margin: 0 auto 1.5rem;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    padding: 4px;
+    background: var(--neon-color);
+    box-shadow: 0 0 20px var(--neon-color);
+    transition: all 0.3s ease;
+}
+
+#meme-gif {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #000;
+}
+
+/* Typography */
+.rating-badge {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--neon-color);
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px var(--neon-color);
+    transition: color 0.3s ease;
+    min-height: 40px;
+}
+
+.feedback-text {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 1.5rem;
+    font-family: monospace;
+    min-height: 20px;
+}
+
+/* Input Area */
+.input-group {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+#password-input {
+    width: 100%;
+    padding: 15px 45px 15px 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid var(--neon-color);
+    color: #fff;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    outline: none;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    transition: all 0.3s ease;
+}
+
+#password-input:focus {
+    box-shadow: 0 0 15px var(--neon-color);
+}
+
+#toggle-visibility {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: color 0.2s;
+}
+
+#toggle-visibility:hover {
+    color: #fff;
+}
+
+/* Stats & Progress */
+.stats-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #888;
+    margin-bottom: 0.5rem;
+    font-family: monospace;
+}
+
+.progress-container {
+    width: 100%;
+    height: 8px;
+    background: #222;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--neon-color);
+    box-shadow: 0 0 10px var(--neon-color);
+    transition: width 0.3s ease, background 0.3s ease;
+}
+
+/* Animation */
+@keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.bounce {
+    animation: pop 0.3s ease-in-out;
+}

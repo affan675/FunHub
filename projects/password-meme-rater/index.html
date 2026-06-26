@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meme Password Rater</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>SECURITY <span class="highlight">TERMINAL</span></h1>
+        
+        <div class="gif-container">
+            <img id="meme-gif" src="https://media.giphy.com/media/VbnUQpnihPSIgIXuZv/giphy.gif" alt="Waiting for input">
+        </div>
+
+        <div class="rating-badge" id="rating-badge">Awaiting Input...</div>
+        <div class="feedback-text" id="feedback-text">Type your password... if you dare.</div>
+
+        <div class="input-group">
+            <input type="password" id="password-input" placeholder="Enter password...">
+            <button id="toggle-visibility"><i class="fas fa-eye"></i></button>
+        </div>
+
+        <div class="stats-row">
+            <span id="char-counter">0 chars • Feeling secure?</span>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

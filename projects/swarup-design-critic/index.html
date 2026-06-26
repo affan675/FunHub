@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swarup's Design Critic</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <header class="top-banner">
+            <img src="assets/images/badge.svg" alt="Badge" class="badge-icon">
+            <h1>DESIGN POLICE — SWARUP'S PATROL</h1>
+            <img src="assets/icons/siren.svg" alt="Siren" class="siren-icon">
+        </header>
+
+        <div class="streak-banner hidden" id="streak-banner">
+            You've disappointed Swarup 5 times in a row. Seek help.
+        </div>
+
+        <main class="main-content">
+            <section class="picker-section">
+                <div class="swatch-container">
+                    <div id="main-swatch" class="swatch">
+                        <img src="assets/images/rejected-stamp.svg" id="rejected-stamp" class="overlay-stamp hidden" alt="Rejected">
+                        <img src="assets/images/swarup-signature.svg" id="swarup-sig" class="signature hidden" alt="Signature">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="color-picker">Pick your masterpiece (or garbage):</label>
+                    <input type="color" id="color-picker" value="#ffffff">
+                </div>
+                <button id="critique-btn" class="critique-btn">CRITIQUE ME</button>
+            </section>
+
+            <section class="verdict-section">
+                
+                <div class="rating-container">
+                    <h3>Swarup Approval Rating</h3>
+                    <div class="meter">
+                        <div class="meter-bg"></div>
+                        <div id="meter-needle" class="meter-needle"></div>
+                    </div>
+                    <div id="rating-score" class="rating-score">0.0 / 10</div>
+                </div>
+
+                <div class="verdict-scene">
+                    <div id="verdict-card" class="verdict-card">
+                        <div class="card-face card-front">
+                            <h2>Awaiting your terrible choice...</h2>
+                        </div>
+                        <div class="card-face card-back">
+                            <div class="card-header">
+                                <h2 id="v-hex">#FFFFFF</h2>
+                                <h3 id="v-name">Imaginationless White</h3>
+                            </div>
+                            <div class="roast-box">
+                                <p id="v-roast">...</p>
+                                <button id="copy-btn" class="icon-btn" title="Copy Roast">
+                                    <img src="assets/icons/copy.svg" alt="Copy">
+                                </button>
+                            </div>
+                            <div class="theory-breakdown" id="v-breakdown">
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <h2>Hall of Shame</h2>
+                    <button id="clear-hall-btn" class="icon-btn" title="Clear Hall">
+                        <img src="assets/icons/trash.svg" alt="Clear">
+                    </button>
+                </div>
+                <ul id="shame-list" class="shame-list">
+                    </ul>
+            </aside>
+        </main>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

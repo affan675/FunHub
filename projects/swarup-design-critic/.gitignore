@@ -1,0 +1,23 @@
+# OS junk
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Editor / IDE
+.vscode/
+.idea/
+*.iml
+
+# Build / generated folders (if any)
+dist/
+build/
+node_modules/
+
+# Logs
+*.log
+*.tmp
+
+# Creator files
+file_creator.py
