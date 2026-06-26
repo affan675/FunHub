@@ -1,179 +1,237 @@
-        (function() {
-            // ── 📦 PROJECT MANIFEST ─────────────────
-            // ✏️ EDIT THIS ARRAY to add, remove, or rename projects.
-            //    Each object: { id, title, emoji, description, folder, color }
-            const projects = [
-                { id: 1, title: "Dost Mast JNV", emoji: "😂",
-                    description: "Hostel roasts + rivalry meter", folder: "dost_mast_jnv", color: "#ff6b6b" },
-                { id: 2, title: "Hostel Excuse Generator", emoji: "🏃",
-                    description: "Wild curfew excuses generator", folder: "hostel-excuse-generator", color: "#feca57" },
-                { id: 3, title: "Roast My Code", emoji: "🔥", description: "Savage dev insult generator",
-                    folder: "roast-my-code", color: "#ff9ff3" },
-                { id: 4, title: "Will I Survive Slider", emoji: "🍛",
-                    description: "Hostel food survival probability", folder: "survival-slider", color: "#54a0ff" },
-                { id: 5, title: "Swarup's Design Critic", emoji: "🎨",
-                    description: "AI-level sarcastic design roasts", folder: "swarup-design-critic", color: "#5f27cd" },
-                { id: 6, title: "Click the Moving Chappal", emoji: "🩴",
-                    description: "Rage-bait floating chappal game", folder: "click-the-chappal", color: "#ff9f43" },
-                { id: 7, title: "Polymath Fact Machine", emoji: "🧠",
-                    description: "Random facts with glitch news ticker", folder: "polymath-fact-machine",
-                color: "#00d2d3" },
-                { id: 8, title: "Password Meme Rater", emoji: "🔐",
-                    description: "Meme-tier password strength checker", folder: "password-meme-rater", color: "#f368e0" },
-                { id: 9, title: "Desk Pet Simulator", emoji: "🟣",
-                    description: "Passive-aggressive Tamagotchi clone", folder: "desk-pet-simulator", color: "#1dd1a1" },
-                { id: 10, title: "Soundboard of Annoyance", emoji: "🔊",
-                    description: "6 obnoxious MP3 sound buttons", folder: "soundboard-annoyance", color: "#ee5a24" }
-            ];
+(function () {
+    'use strict';
 
-            // ── DOM refs ──
-            const grid = document.getElementById('project-grid');
-            const searchInput = document.getElementById('search-input');
-            const btnSurprise = document.getElementById('btn-surprise');
-            const noResults = document.getElementById('no-results');
-            const projectCountEl = document.getElementById('project-count');
-            const geniusLabel = document.getElementById('genius-label');
+    // ── 🛠️ DOM REFERENCES ────────────────────
+    const grid = document.getElementById('project-grid');
+    const searchInput = document.getElementById('search-input');
+    const btnSurprise = document.getElementById('btn-surprise');
+    const noResults = document.getElementById('no-results');
+    const projectCountEl = document.getElementById('project-count');
+    const geniusLabel = document.getElementById('genius-label');
 
-            // ── Update dynamic counter ──
-            projectCountEl.textContent = projects.length;
-            // Keep "1 Genius" or make it playful
-            geniusLabel.textContent = projects.length >= 10 ? '1 Genius' : '1 Mad Lad';
+    // ── 🧩 POPULATE CARD INNER HTML FROM DATA ATTRIBUTES ──
+    function buildCards() {
+        const cards = grid.querySelectorAll('.card');
+        cards.forEach((card, index) => {
+            const title = card.dataset.title;
+            const emoji = card.dataset.emoji;
+            const description = card.dataset.description;
+            const color = card.dataset.color;
+            const id = index + 1; // use index for badge number, or you can add data-id later
 
-            // ── ⚙️ RENDER ENGINE ────────────────────
-            function renderAllProjects() {
-                // Clear grid
-                grid.innerHTML = '';
+            // Set CSS custom property for glow color
+            card.style.setProperty('--card-glow-color', color);
+            // Set staggered animation delay
+            card.style.animationDelay = `${index * 50}ms`;
 
-                projects.forEach((project, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.setAttribute('role', 'listitem');
-                    card.setAttribute('tabindex', '0');
-                    card.setAttribute('aria-label', `${project.title} — ${project.description}`);
-                    // Store folder & color as data attributes for navigation & styling
-                    card.dataset.folder = project.folder;
-                    card.dataset.color = project.color;
-                    card.dataset.title = project.title.toLowerCase();
-                    card.dataset.desc = project.description.toLowerCase();
-                    // Set the glow color as a CSS custom property on the card
-                    card.style.setProperty('--card-glow-color', project.color);
-                    // Staggered animation delay (50ms per card)
-                    card.style.animationDelay = `${index * 50}ms`;
-
-                    // ── Card inner HTML ──
-                    card.innerHTML = `
-                <span class="card-emoji" aria-hidden="true">${project.emoji}</span>
-                <span class="card-title">${project.title}</span>
-                <span class="card-desc">${project.description}</span>
-                <span class="card-badge" aria-hidden="true">#${project.id}</span>
+            // Inject inner structure
+            card.innerHTML = `
+                <span class="card-emoji" aria-hidden="true">${emoji}</span>
+                <span class="card-title">${title}</span>
+                <span class="card-desc">${description}</span>
+                <span class="card-badge" aria-hidden="true">#${id}</span>
                 <span class="card-arrow" aria-hidden="true">→</span>
-              `;
+            `;
 
-                    grid.appendChild(card);
-                });
+            // Store lowercase title and description for search
+            card.dataset.titleLower = title.toLowerCase();
+            card.dataset.descLower = description.toLowerCase();
+        });
+    }
 
-                // Hide no-results message on fresh render
-                noResults.classList.remove('visible');
+    // ── 📊 UPDATE PROJECT COUNTER ────────────
+    function updateCounter() {
+        const total = grid.querySelectorAll('.card').length;
+        projectCountEl.textContent = total;
+        geniusLabel.textContent = total >= 10 ? '1 Genius' : '1 Mad Lad';
+    }
+
+    // ── 🔍 SEARCH LOGIC ──────────────────────
+    function filterCards() {
+        const query = searchInput.value.trim().toLowerCase();
+        const cards = grid.querySelectorAll('.card');
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            const title = card.dataset.titleLower || '';
+            const desc = card.dataset.descLower || '';
+            const matches = title.includes(query) || desc.includes(query);
+
+            if (matches) {
+                card.style.display = '';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
             }
+        });
 
-            // ── 🔍 SEARCH LOGIC ──────────────────────
-            function filterCards() {
-                const query = searchInput.value.trim().toLowerCase();
-                const cards = grid.querySelectorAll('.card');
-                let visibleCount = 0;
+        if (visibleCount === 0 && query.length > 0) {
+            noResults.classList.add('visible');
+        } else {
+            noResults.classList.remove('visible');
+        }
+    }
 
-                cards.forEach(card => {
-                    const title = card.dataset.title || '';
-                    const desc = card.dataset.desc || '';
-                    const matches = title.includes(query) || desc.includes(query);
+    // ── 🧠 DEVICE / MOBILE DETECTION ──────────
+    function isMobileDevice() {
+        return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    }
 
-                    if (matches) {
-                        card.style.display = '';
-                        // Re-trigger stagger subtly? No—just keep them visible.
-                        visibleCount++;
-                    } else {
-                        card.style.display = 'none';
+    // ── 🎯 NAVIGATION HANDLER (based on action type) ──
+    function handleCardClick(cardElement) {
+        const actionType = cardElement.dataset.actionType;
+        const liveUrl = cardElement.dataset.liveUrl;
+        const localUrl = cardElement.dataset.localUrl;
+        const downloadUrl = cardElement.dataset.downloadUrl;
+
+        // Prevent rapid double-clicks
+        if (cardElement.classList.contains('card-clicked')) return;
+
+        // Add pop animation
+        cardElement.classList.add('card-clicked');
+
+        const navigate = (url) => {
+            setTimeout(() => {
+                window.location.href = url;
+            }, 200);
+        };
+
+        const showToast = (message) => {
+            // Simple temporary toast (could be replaced with a nicer one)
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.background = '#1a1f2b';
+            toast.style.color = '#e8eaef';
+            toast.style.padding = '12px 24px';
+            toast.style.borderRadius = '50px';
+            toast.style.border = '1px solid rgba(255,255,255,0.1)';
+            toast.style.zIndex = '9999';
+            toast.style.fontSize = '0.9rem';
+            toast.style.backdropFilter = 'blur(12px)';
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.remove();
+            }, 2500);
+        };
+
+        switch (actionType) {
+            case 'live':
+                if (liveUrl) navigate(liveUrl);
+                break;
+
+            case 'local':
+                if (localUrl) {
+                    if (isMobileDevice()) {
+                        showToast('📱 Opening local file. For full experience, use a desktop with Live Server.');
                     }
-                });
+                    navigate(localUrl);
+                }
+                break;
 
-                // Show/hide the "no results" message
-                if (visibleCount === 0 && query.length > 0) {
-                    noResults.classList.add('visible');
+            case 'download':
+                if (downloadUrl) {
+                    if (isMobileDevice()) {
+                        // On mobile, fallback to local HTML if available
+                        if (localUrl) {
+                            showToast('📱 Mobile detected. Opening HTML (may need server).');
+                            navigate(localUrl);
+                        } else {
+                            showToast('⚠️ This project requires a desktop to download.');
+                        }
+                    } else {
+                        // Desktop: trigger download (zip)
+                        navigate(downloadUrl);
+                    }
+                } else if (localUrl) {
+                    // fallback to local if no download
+                    navigate(localUrl);
+                }
+                break;
+
+            case 'conditional':
+                // Specific logic for project #4 (Will I Survive Slider)
+                if (isMobileDevice()) {
+                    if (localUrl) {
+                        showToast('📱 Opening lightweight version. For full slider, use desktop.');
+                        navigate(localUrl);
+                    } else {
+                        showToast('⚠️ Desktop required for this project.');
+                    }
                 } else {
-                    noResults.classList.remove('visible');
+                    if (downloadUrl) {
+                        navigate(downloadUrl);
+                    } else if (localUrl) {
+                        navigate(localUrl);
+                    }
                 }
-            }
+                break;
 
-            // ── 🎲 SURPRISE ME ──────────────────────
-            function surpriseMe() {
-                const randomIndex = Math.floor(Math.random() * projects.length);
-                const chosen = projects[randomIndex];
-                navigateToProject(chosen.folder);
-            }
+            default:
+                // Fallback: try live, then local, then download
+                if (liveUrl) navigate(liveUrl);
+                else if (localUrl) navigate(localUrl);
+                else if (downloadUrl) navigate(downloadUrl);
+        }
+    }
 
-            // ── 🧭 Navigation helper ─────────────────
-            function navigateToProject(folderName) {
-                const targetUrl = `./projects/${folderName}/index.html`;
-                window.location.href = targetUrl;
-            }
+    // ── 🎲 SURPRISE ME ──────────────────────
+    function surpriseMe() {
+        const cards = Array.from(grid.querySelectorAll('.card'));
+        if (cards.length === 0) return;
+        const randomCard = cards[Math.floor(Math.random() * cards.length)];
+        // Simulate a click on that card (by calling handler directly)
+        handleCardClick(randomCard);
+    }
 
-            // ── ✨ INTERACTIVE EFFECTS (click feedback) ──
-            function handleCardClick(cardElement) {
-                const folder = cardElement.dataset.folder;
-                if (!folder) return;
+    // ── 🖱️ EVENT LISTENERS ──────────────────
+    // Card clicks (event delegation)
+    grid.addEventListener('click', (event) => {
+        const card = event.target.closest('.card');
+        if (!card) return;
+        if (card.classList.contains('card-clicked')) return;
+        handleCardClick(card);
+    });
 
-                // Prevent rapid double-clicks
-                if (cardElement.classList.contains('card-clicked')) return;
+    // Keyboard support (Enter / Space)
+    grid.addEventListener('keydown', (event) => {
+        const card = event.target.closest('.card');
+        if (!card) return;
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            if (card.classList.contains('card-clicked')) return;
+            handleCardClick(card);
+        }
+    });
 
-                // Add the pop animation class
-                cardElement.classList.add('card-clicked');
+    // Search input
+    searchInput.addEventListener('input', filterCards);
+    searchInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            searchInput.value = '';
+            filterCards();
+            searchInput.blur();
+        }
+    });
 
-                // After 200ms, navigate
-                setTimeout(() => {
-                    navigateToProject(folder);
-                }, 200);
-            }
+    // Surprise Me button
+    btnSurprise.addEventListener('click', surpriseMe);
 
-            // ── 🖱️ EVENT LISTENERS ──────────────────
-            // Card clicks (event delegation on the grid)
-            grid.addEventListener('click', (event) => {
-                const card = event.target.closest('.card');
-                if (!card) return;
-                if (card.classList.contains('card-clicked')) return;
-                handleCardClick(card);
-            });
+    // ── 🚀 INITIALIZATION ────────────────────
+    function init() {
+        buildCards();      // Inject content & data attributes for search
+        updateCounter();   // Set total projects count
+        // Initial search state (all visible)
+        filterCards();
+    }
 
-            // Keyboard support: Enter/Space on focused card
-            grid.addEventListener('keydown', (event) => {
-                const card = event.target.closest('.card');
-                if (!card) return;
-                if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
-                    if (card.classList.contains('card-clicked')) return;
-                    handleCardClick(card);
-                }
-            });
-
-            // Search input
-            searchInput.addEventListener('input', filterCards);
-            // Also handle Escape key to clear search
-            searchInput.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape') {
-                    searchInput.value = '';
-                    filterCards();
-                    searchInput.blur();
-                }
-            });
-
-            // Surprise Me button
-            btnSurprise.addEventListener('click', surpriseMe);
-
-            // ── 🚀 INITIAL RENDER ───────────────────
-            renderAllProjects();
-
-            // Log for dev convenience
-            console.log('⚡ FunHub initialized with %c' + projects.length + ' projects',
-                'font-weight:bold;color:#00d2d3;');
-            console.log('📦 Manifest is editable inside the <script> tag — look for "const projects = ["');
-            console.log('🎲 Click "Surprise Me" or any card to launch a project!');
-        })();
+    // Start when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();

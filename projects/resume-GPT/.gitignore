@@ -1,0 +1,40 @@
+# Python cache & compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Environment / secrets
+.env
+.env.local
+*.key
+*.pem
+secrets.yaml
+
+# IDE
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Logs & temp
+*.log
+*.tmp
+*.db
+*.sqlite
+
+# If you later use static build outputs
+static/output.css
+
+
+# File creator file
+file_creator.py

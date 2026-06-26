@@ -5,17 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>⚡ FunHub — Affan's Polymath Lair</title>
 
-    <!-- 🎨 Google Fonts: Orbitron for headings, Inter for body -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- 🎨 STYLES -->
+    <!-- External Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <!-- 🚀 HTML STRUCTURE ─────────────────────── -->
     <div class="app-wrapper">
-
         <!-- ⚡ HEADER SECTION -->
         <header class="header">
             <div class="header-brand">
@@ -24,21 +22,14 @@
                 </h1>
                 <p class="header-subtitle">
                     <span class="counter-dot"></span>
-                    <span id="project-count">10</span> Projects • <span id="genius-label">1 Genius</span>
+                    <span id="project-count">13</span> Projects • <span id="genius-label">1 Genius</span>
                 </p>
             </div>
 
             <div class="header-actions">
                 <!-- 🔍 Search Bar -->
                 <div class="search-wrapper">
-                    <input
-                    type="text"
-                    id="search-input"
-                    class="search-input"
-                    placeholder="Search projects..."
-                    autocomplete="off"
-                    aria-label="Search projects"
-                    >
+                    <input type="text" id="search-input" class="search-input" placeholder="Search projects..." autocomplete="off" aria-label="Search projects">
                     <span class="search-icon">🔍</span>
                 </div>
 
@@ -49,9 +40,163 @@
             </div>
         </header>
 
-        <!-- 📦 PROJECT GRID (cards render here dynamically) -->
+        <!-- 📦 PROJECT GRID (cards are hard‑coded with data attributes) -->
         <div id="project-grid" class="project-grid" role="list" aria-label="Project cards">
-            <!-- Cards injected by JavaScript -->
+            <!-- Project 1: Dost Mast JNV -->
+            <div class="card" role="listitem" tabindex="0"
+                 data-title="Dost Mast JNV"
+                 data-emoji="😂"
+                 data-description="Hostel roasts + rivalry meter"
+                 data-color="#ff6b6b"
+                 data-action-type="live"
+                 data-live-url="https://affan675.github.io/dost_mast_jnv/"
+                 data-local-url=""
+                 data-download-url="">
+            </div>
+
+            <!-- Project 2: Hostel Excuse Generator -->
+            <div class="card" role="listitem" tabindex="0"
+                 data-title="Hostel Excuse Generator"
+                 data-emoji="🏃"
+                 data-description="Wild curfew excuses generator"
+                 data-color="#feca57"
+                 data-action-type="live"
+                 data-live-url="https://affan675.github.io/hostel-excuse-generator/"
+                 data-local-url=""
+                 data-download-url="">
+            </div>
+
+            <!-- Project 3: Roast My Code -->
+            <div class="card" role="listitem" tabindex="0"
+                 data-title="Roast My Code"
+                 data-emoji="🔥"
+                 data-description="Savage dev insult generator"
+                 data-color="#ff9ff3"
+                 data-action-type="download"
+                 data-live-url=""
+                 data-local-url="projects/roast-my-code/index.html"
+                 data-download-url="projects/downloads/roast-my-code.zip">
+            </div>
+
+            <!-- Project 4: Will I Survive Slider -->
+            <div class="card" role="listitem" tabindex="0"
+                 data-title="Will I Survive Slider"
+                 data-emoji="🍛"
+                 data-description="Hostel food survival probability"
+                 data-color="#54a0ff"
+                 data-action-type="conditional"
+                 data-live-url=""
+                 data-local-url="projects/survival-slider/index.html"
+                 data-download-url="projects/downloads/survival-slider.zip">
+            </div>
+
+            <!-- Project 5: Swarup's Design Critic -->
+            <div class="card" role="listitem" tabindex="0"
+                 data-title="Swarup's Design Critic"
+                 data-emoji="🎨"
+                 data-description="AI-level sarcastic design roasts"
+                 data-color="#5f27cd"
+                 data-action-type="download"
+                 data-live-url=""
+                 data-local-url="projects/swarup-design-critic/index.html"
+                 data-download-url="projects/downloads/swarup-design-critic.zip">
+            </div>
+
+            <!-- Project 6: Click the Moving Chappal -->
+            <div class="card" role="listitem" tabindex="0"
+                 data-title="Click the Moving Chappal"
+                 data-emoji="🩴"
+                 data-description="Rage-bait floating chappal game"
+                 data-color="#ff9f43"
+                 data-action-type="download"
+                 data-live-url=""
+                 data-local-url="projects/click-the-chappal/index.html"
+                 data-download-url="projects/downloads/click-the-chappal.zip">
+            </div>
+
+            <!-- Project 7: Polymath Fact Machine -->
+            <div class="card" role="listitem" tabindex="0"
+                 data-title="Polymath Fact Machine"
+                 data-emoji="🧠"
+                 data-description="Random facts with glitch news ticker"
+                 data-color="#00d2d3"
+                 data-action-type="local"
+                 data-live-url=""
+                 data-local-url="projects/polymath-fact-machine/index.html"
+                 data-download-url="">
+            </div>
+
+            <!-- Project 8: Password Meme Rater -->
+            <div class="card" role="listitem" tabindex="0"
+                 data-title="Password Meme Rater"
+                 data-emoji="🔐"
+                 data-description="Meme-tier password strength checker"
+                 data-color="#f368e0"
+                 data-action-type="local"
+                 data-live-url=""
+                 data-local-url="projects/password-meme-rater/index.html"
+                 data-download-url="">
+            </div>
+
+            <!-- Project 9: Desk Pet Simulator -->
+            <div class="card" role="listitem" tabindex="0"
+                 data-title="Desk Pet Simulator"
+                 data-emoji="🟣"
+                 data-description="Passive-aggressive Tamagotchi clone"
+                 data-color="#1dd1a1"
+                 data-action-type="local"
+                 data-live-url=""
+                 data-local-url="projects/desk-pet-simulator/index.html"
+                 data-download-url="">
+            </div>
+
+            <!-- Project 10: Soundboard of Annoyance -->
+            <div class="card" role="listitem" tabindex="0"
+                 data-title="Soundboard of Annoyance"
+                 data-emoji="🔊"
+                 data-description="6 obnoxious MP3 sound buttons"
+                 data-color="#ee5a24"
+                 data-action-type="local"
+                 data-live-url=""
+                 data-local-url="projects/soundboard-annoyance/index.html"
+                 data-download-url="">
+            </div>
+
+            <!-- Project 11: EchoNook -->
+            <div class="card" role="listitem" tabindex="0"
+                 data-title="EchoNook"
+                 data-emoji="🌌"
+                 data-description="Dev playground & random thought generator"
+                 data-color="#7c3aed"
+                 data-action-type="live"
+                 data-live-url="https://affan675.github.io/Echo-Nook/"
+                 data-local-url=""
+                 data-download-url="">
+            </div>
+
+            <!-- Project 12: Prompto -->
+            <div class="card" role="listitem" tabindex="0"
+                 data-title="Prompto"
+                 data-emoji="🤖"
+                 data-description="Satirical AI prompt marketplace"
+                 data-color="#06b6d4"
+                 data-action-type="live"
+                 data-live-url="https://affan675.github.io/prompto/"
+                 data-local-url=""
+                 data-download-url="">
+            </div>
+
+            <!-- Project 13: ResumeGPT -->
+            <div class="card" role="listitem" tabindex="0"
+                 data-title="ResumeGPT"
+                 data-emoji="📄"
+                 data-description="Fake funny job giver & player"
+                 data-color="#f97316"
+                 data-action-type="local"
+                 data-live-url=""
+                 data-local-url="projects/resume-GPT/index.html"
+                 data-download-url="">
+            </div>
         </div>
 
         <!-- 🙈 No results message (hidden by default) -->
@@ -65,7 +210,7 @@
         </footer>
     </div>
 
-    <!-- ⚙️ ALL JAVASCRIPT LOGIC -->
+    <!-- External JavaScript -->
     <script src="script.js"></script>
 </body>
 </html>
